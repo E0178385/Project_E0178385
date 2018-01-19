@@ -1,0 +1,31 @@
+clc;
+clear all;
+%K=3;
+N=2;
+mu=100;
+gamma=0.9;
+l=[10 30 20]';
+V1(1,:)=[0;0;0;0;0;0;0;0];
+V2(1,:)=[0;0;0;0;0;0;0;0];
+max_sol=0;
+states=[[1,1,1] ; [1,1,2] ;[1,2,1] ;[2,1,1]; [1,2,2] ;[2,1,2] ;[2,2,1]; [2,2,2]];
+state=[1,2,1];
+price=[0.5;0.5];
+r1(1)= sum((state==1).*l'.*price(1));
+r2(1)= sum((state==2).*l'.*price(2));
+p=choice_probability(l,state,N,price,mu);
+q=weight_probability(p,states);
+P_first=transition_probability(q);
+V1(2,:)=r1(1)+gamma*(sum(P_first.*V1(1,:)));
+V2(2,:)=r2(1)+gamma*(sum(P_first.*V2(1,:)));
+for i=0:0.01:1,
+    price(1)=i;
+    p=choice_probability(l,state,N,price,mu);
+    q=weight_probability(p,states);
+    P=transition_probability(q);
+    sol=sum((state==1).*l'.*i)+gamma*(sum(P.*V1(2,:)));
+    if sol>max_sol
+        max_sol=sol;
+        price_new=i;
+    end;    
+end;

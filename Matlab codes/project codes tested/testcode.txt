@@ -1,0 +1,41 @@
+% testing with pre determined price - 91% accuracy
+clc
+iter=1000;
+load=[10 30 20]';
+[V1,V2,price,loop_num]=optimalpricemethod1(load);
+V1_arr=zeros(iter,8);
+V2_arr=zeros(iter,8);
+state=zeros(iter,1);
+for i=1:iter
+    load=[poissrnd(10) poissrnd(30) poissrnd(20)]';
+    [V1,V2,loop_num]=rewardwithfixedprice(price,load);
+    V1_arr(i,:)=V1(loop_num,:);
+    V2_arr(i,:)=V2(loop_num,:);
+    [~,b]=max(V1(loop_num,2:7));
+    state(i)=b+1;
+end;
+
+
+
+
+
+
+
+% testing with change in price  -> 85 % accuracy
+%{
+clc
+iter=100;
+price_arr=zeros(iter,2);
+V1_arr=zeros(iter,8);
+V2_arr=zeros(iter,8);
+state=zeros(iter,1);
+for i=1:iter
+    load=[poissrnd(10) poissrnd(30) poissrnd(20)]';
+    [V1,V2,price,loop_num]=optimalpricemethod1(load);
+    price_arr(i,:)=price;
+    V1_arr(i,:)=V1(loop_num,:);
+    V2_arr(i,:)=V2(loop_num,:);
+    [~,b]=max(V1(loop_num,2:7));
+    state(i)=b+1;
+end;
+%}
